@@ -52,7 +52,7 @@ public class ServerLinks {
 		}
 
 		if (!configFile.exists()) {
-			try (InputStream input = ServerLink.class.getResourceAsStream("/" + configFile.getName())) {
+			try (InputStream input = ServerLinks.class.getResourceAsStream("/" + configFile.getName())) {
 				if (input != null) {
 					Files.copy(input, configFile.toPath());
 				} else {
