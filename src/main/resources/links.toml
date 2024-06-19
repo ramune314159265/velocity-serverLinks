@@ -1,0 +1,6 @@
+[[links]]
+name = "WEBSITE"
+url = "https://example.com"
+[[links]]
+name = "Custom name"
+url = "https://example.net"
