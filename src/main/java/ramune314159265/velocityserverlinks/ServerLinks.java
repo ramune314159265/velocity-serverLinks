@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.moandjiezana.toml.Toml;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyReloadEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -19,7 +20,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Plugin(
 		id = "velocity-serverlinks",
@@ -65,20 +65,25 @@ public class ServerLinks {
 
 		Toml configToml = new Toml().read(configFile);
 		ServerLinks.ServerLinkList.clear();
-		List<HashMap<String,String>> links = configToml.getList("links");
-		links
-				.forEach(link -> {
-					try {
-						ServerLinks.ServerLinkList.add(ServerLink.serverLink(ServerLink.Type.valueOf(link.get("name")), link.get("url")));
-					} catch (IllegalArgumentException e) {
-						ServerLinks.ServerLinkList.add(ServerLink.serverLink(MiniMessage.miniMessage().deserialize(link.get("name")), link.get("url")));
-					}
-				});
+		List<HashMap<String, String>> links = configToml.getList("links");
+		links.forEach(link -> {
+			try {
+				ServerLinks.ServerLinkList.add(ServerLink.serverLink(ServerLink.Type.valueOf(link.get("name")), link.get("url")));
+			} catch (IllegalArgumentException e) {
+				ServerLinks.ServerLinkList.add(ServerLink.serverLink(MiniMessage.miniMessage().deserialize(link.get("name")), link.get("url")));
+			}
+		});
 	}
 
 	@Subscribe
 	public void onProxyInitialization(ProxyInitializeEvent event) {
 		loadConf();
 		server.getEventManager().register(this, new PlayerListener());
+	}
+
+	@Subscribe
+	public void onProxyReloaded(ProxyReloadEvent event) {
+		this.loadConf();
+		logger.info("Reload complete");
 	}
 }

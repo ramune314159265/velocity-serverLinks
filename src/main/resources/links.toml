@@ -1,6 +1,11 @@
+# Minimessage format can be used for name values
+# https://docs.advntr.dev/minimessage/format.html
 [[links]]
 name = "WEBSITE"
 url = "https://example.com"
 [[links]]
 name = "Custom name"
+url = "https://example.net"
+[[links]]
+name = "<rainbow><bold>Formatted</bold> name</rainbow>"
 url = "https://example.net"
